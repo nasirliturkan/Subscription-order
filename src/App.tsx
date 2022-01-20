@@ -1,24 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
+import { SubscriptionOrderProcess } from "./Views";
 
 function App() {
+  useEffect(() => {
+    const url = "https://covid.ourworldindata.org/data/owid-covid-data.json";
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        const json = await response.json();
+        const data = Object.values(json).map((i) => i);
+        console.log(json);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={() => {
+              return <Redirect to="/subscription-order-process" />;
+            }}
+          />
+          <Route exact path="/subscription-order-process">
+            <SubscriptionOrderProcess />
+          </Route>
+        </Switch>
+      </Router>
     </div>
   );
 }
